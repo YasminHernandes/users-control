@@ -151,7 +151,13 @@ export class FormComponent implements OnInit {
 
     return passValue === confirmPassValue
       ? null
+<<<<<<< HEAD
       : this.userForm.get('confirmPassword')?.setErrors({ passwordsMismatch: true });
+=======
+      : this.userForm
+          .get('confirmPassword')
+          ?.setErrors({ passwordsMismatch: true });
+>>>>>>> ac7f6d091b4793386e9f8ff8fad2c6dbe477993b
   }
 
   handleSubmit() {}
