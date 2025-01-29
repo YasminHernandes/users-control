@@ -1,0 +1,269 @@
+<form [formGroup]="userForm">
+  <div class="flex flex-col gap-4">
+    <!-- Nome completo e Data de Nascimento -->
+    <div class="flex flex-col gap-4 lg:flex-row">
+      <mat-form-field class="w-full">
+        <mat-label> Nome completo </mat-label>
+        <input matInput formControlName="name" />
+
+        <mat-error *ngIf="handleMessageError('name', 'required')">
+          Campo obrigatório!
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full lg:max-w-[316px]">
+        <mat-label> Data de Nascimento </mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="birthDate"
+          placeholder="MM/DD/YYYY"
+          minlength="10"
+          maxlength="10"
+          [matDatepickerFilter]="calendarFilter"
+        />
+
+        <mat-error
+          *ngIf="
+            this.userForm.get('birthDate')?.hasError('required') &&
+            this.userForm.get('birthDate')?.untouched
+          "
+        >
+          Campo obrigatório!
+        </mat-error>
+        <mat-error
+          *ngIf="
+            this.userForm.get('birthDate')?.invalid &&
+            this.userForm.get('birthDate')?.touched
+          "
+        >
+          Por favor, insira uma data válida
+        </mat-error>
+
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- Telefone e Cargo -->
+    <div class="flex flex-col gap-4 lg:flex-row">
+      <mat-form-field class="w-full lg:max-w-[313px]">
+        <mat-label> Telefone </mat-label>
+        <input
+          matInput
+          minlength="11"
+          maxlength="11"
+          formControlName="telephone"
+          (change)="onFormattedPhone(userForm.get('telephone')?.value!)"
+          [value]="formattedPhone"
+        />
+
+        <mat-error *ngIf="handleMessageError('telephone', 'required')">
+          Campo obrigatório!
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label> Cargo </mat-label>
+        <input matInput formControlName="role" />
+
+        <mat-error *ngIf="handleMessageError('role', 'required')">
+          Campo obrigatório!
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Rua e CEP-->
+    <div class="flex flex-col gap-4 md:flex-row">
+      <mat-form-field class="w-full md:max-w-[200px]" formGroupName="address">
+        <mat-label> CEP </mat-label>
+        <input
+          matInput
+          type="text"
+          minlength="8"
+          maxlength="8"
+          formControlName="zipCode"
+          (change)="onFormattedCep(userForm.get('address.zipCode')?.value!)"
+          (blur)="getLocationInfo()"
+          [value]="formattedCep"
+        />
+
+        <mat-error *ngIf="handleMessageError('address.zipCode', 'required')">
+          Campo Obrigatório!
+        </mat-error>
+        <mat-error
+          *ngIf="handleMessageError('address.zipCode', 'cepInvalid', true)"
+        >
+          Por favor, insira um CEP válido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full" formGroupName="address">
+        <mat-label> Rua </mat-label>
+        <input
+          matInput
+          formControlName="street"
+          [value]="formattedStreet ? formattedStreet : ''"
+        />
+
+        <mat-error *ngIf="handleMessageError('address.street', 'required')">
+          Campo Obrigatório!
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Complemento e Número-->
+    <div class="flex flex-col gap-4 md:flex-row">
+      <mat-form-field class="w-full" formGroupName="address">
+        <mat-label>
+          Complemento
+          <span>(Opcional)</span>
+        </mat-label>
+
+        <input matInput formControlName="complement" />
+      </mat-form-field>
+
+      <!-- Número -->
+      <mat-form-field class="w-full md:max-w-[240px]" formGroupName="address">
+        <mat-label> Número </mat-label>
+        <input matInput type="number" formControlName="number" />
+
+        <mat-error *ngIf="handleMessageError('address.number', 'required')">
+          Campo Obrigatório!
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Cidade, Estado e País-->
+    <div class="flex flex-col gap-4 flex-wrap md:flex-row lg:flex-nowrap">
+      <mat-form-field
+        class="w-full basis-full lg:max-w-[313px]"
+        formGroupName="address"
+      >
+        <mat-label> Cidade </mat-label>
+        <input matInput formControlName="city" />
+
+        <mat-error *ngIf="handleMessageError('address.city', 'required')">
+          Campo Obrigatório!
+        </mat-error>
+      </mat-form-field>
+
+      <div class="w-full flex flex-col gap-4 md:flex-row">
+        <mat-form-field class="w-full" formGroupName="address">
+          <mat-label> Estado </mat-label>
+
+          <mat-select formControlName="state">
+            <mat-option *ngFor="let estado of states" [value]="estado.nome">
+              {{ estado.nome }}
+            </mat-option>
+          </mat-select>
+
+          <mat-error *ngIf="handleMessageError('address.state', 'required')">
+            Campo Obrigatório!
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full" formGroupName="address">
+          <mat-label> País </mat-label>
+
+          <mat-select formControlName="country">
+            <mat-option *ngFor="let pais of country" [value]="pais.nome">
+              {{ pais.nome }}
+            </mat-option>
+          </mat-select>
+
+          <mat-error *ngIf="handleMessageError('address.country', 'required')">
+            Campo Obrigatório!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Email e Senha -->
+    <div class="flex flex-col gap-4 lg:flex-row">
+      <mat-form-field class="w-full">
+        <mat-label> Email </mat-label>
+        <input matInput type="email" formControlName="email" />
+
+        <mat-error *ngIf="handleMessageError('email', 'required')">
+          Campo obrigatório!
+        </mat-error>
+
+        <mat-error
+          *ngIf="
+            userForm.get('email')?.invalid &&
+            userForm.get('email')?.value?.length != 0
+          "
+        >
+          Por favor, insira um email válido
+        </mat-error>
+      </mat-form-field>
+
+      <div class="relative">
+        <mat-form-field class="w-full">
+          <mat-label> Senha </mat-label>
+          <input matInput type="password" formControlName="password" (input)="validatePassword($event)"/>
+
+          <mat-hint class="flex">
+            <div
+              class="w-full h-2 absolute -bottom-1 bg-mine-shaft-100 rounded-sm"
+            >
+              <div
+                class="h-full rounded-sm transition-[width] duration-200 delay-200 ease-in"
+                [style.width.%]="widthPasswordProgress"
+                [ngClass]="bgProgressColor"
+              ></div>
+            </div>
+          </mat-hint>
+
+          <mat-error *ngIf="handleMessageError('password', 'required')">
+            Campo obrigatório!
+          </mat-error>
+        </mat-form-field>
+
+        <svg-icon
+          src="assets/icons/svg/info.svg" 
+          class="absolute top-1.5 right-1.5 cursor-pointer"
+          matTooltip="A senha deve conter pelo menos 8 caracteres, sendo: 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial (@$!%*?&)"
+        ></svg-icon>
+      </div>
+
+      <mat-form-field class="w-full">
+        <mat-label> Confirmar Senha </mat-label>
+        <input
+          matInput
+          type="password"
+          formControlName="confirmPassword"
+          (input)="validateSamePassword()"
+        />
+
+        <mat-error *ngIf="handleMessageError('confirmPassword', 'required')">
+          Campo obrigatório!
+        </mat-error>
+
+        <mat-error *ngIf="handleMessageError('confirmPassword', 'passwordsMismatch', true)">
+          As senhas não são iguais!
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="w-full flex flex-col gap-4 mt-9 md:flex-row md:justify-center">
+    <button
+      mat-raised-button
+      class="!bg-thunderbird-700 !text-mine-shaft-50"
+      (click)="handleSubmit()"
+    >
+      Cadastrar
+    </button>
+    <button
+      mat-stroked-button
+      class="!border-thunderbird-700 !text-thunderbird-700"
+    >
+      Limpar
+    </button>
+  </div>
+</form>
