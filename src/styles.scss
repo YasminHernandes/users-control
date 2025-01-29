@@ -1,51 +1,69 @@
-
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
-// Plus imports for other components in your app.
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
-
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$user-control-primary: mat.define-palette(mat.$indigo-palette);
-$user-control-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$user-control-warn: mat.define-palette(mat.$red-palette);
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$user-control-theme: mat.define-light-theme((
-  color: (
-    primary: $user-control-primary,
-    accent: $user-control-accent,
-    warn: $user-control-warn,
-  )
-));
-
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include mat.all-component-themes($user-control-theme);
+@use './theme' as *;
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-// Gambiarra - aplica a regra em qualquer elemento que nao comece a classe com .p- (primeng)
+// Custom Palette
+:root {
+  --tw-roman-50: #FDF3F3;
+  --tw-roman-100: #FBE5E5;
+  --tw-roman-200: #F9CFCF;
+  --tw-roman-300: #F3AEAE;
+  --tw-roman-400: #EB7E7E;
+  --tw-roman-500: #E16363;
+  --tw-roman-600: #CA3838;
+  --tw-roman-700: #AA2B2B;
+  --tw-roman-800: #8D2727;
+  --tw-roman-900: #752727;
+  --tw-roman-950: #3F1010;
+
+  --tw-mine-shaft-50: #F6F6F6;
+  --tw-mine-shaft-100: #E7E7E7;
+  --tw-mine-shaft-200: #D1D1D1;
+  --tw-mine-shaft-300: #B0B0B0;
+  --tw-mine-shaft-400: #888888;
+  --tw-mine-shaft-500: #6D6D6D;
+  --tw-mine-shaft-600: #5D5D5D;
+  --tw-mine-shaft-700: #4F4F4F;
+  --tw-mine-shaft-800: #454545;
+  --tw-mine-shaft-900: #333333;
+  --tw-mine-shaft-950: #262626;
+
+  --tw-raw-sienna-50: #FDF6EF;
+  --tw-raw-sienna-100: #FAEADA;
+  --tw-raw-sienna-200: #F3D2B5;
+  --tw-raw-sienna-300: #ECB485;
+  --tw-raw-sienna-400: #E38B54;
+  --tw-raw-sienna-500: #DE763E;
+  --tw-raw-sienna-600: #CE5728;
+  --tw-raw-sienna-700: #AB4323;
+  --tw-raw-sienna-800: #893723;
+  --tw-raw-sienna-900: #6F2F1F;
+  --tw-raw-sienna-950: #3B150F;
+
+  --tw-thunderbird-50: #FFF5ED;
+  --tw-thunderbird-100: #FFE8D4;
+  --tw-thunderbird-200: #FFCCA9;
+  --tw-thunderbird-300: #FFA872;
+  --tw-thunderbird-400: #FE7939;
+  --tw-thunderbird-500: #FD5412;
+  --tw-thunderbird-600: #EE3A08;
+  --tw-thunderbird-700: #C52809;
+  --tw-thunderbird-800: #9C2110;
+  --tw-thunderbird-900: #7E1E10;
+  --tw-thunderbird-950: #440B06;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  border: none;
 }
 
-button {
-  border: none;
+body {
+  @apply bg-mine-shaft-50;
 }
 
 a {
@@ -53,4 +71,12 @@ a {
   color: inherit;
 }
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Inter, "Helvetica Neue", sans-serif; }
+
+
+// Override Angular Material 
+
+.mat-mdc-form-field-hint-wrapper,
+.mat-mdc-form-field-error-wrapper {
+    padding: 0 !important;
+}
