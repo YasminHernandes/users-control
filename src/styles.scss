@@ -1,4 +1,4 @@
-@use './theme' as *;
+@use "./theme" as *;
 
 @tailwind base;
 @tailwind components;
@@ -6,53 +6,65 @@
 
 // Custom Palette
 :root {
-  --tw-roman-50: #FDF3F3;
-  --tw-roman-100: #FBE5E5;
-  --tw-roman-200: #F9CFCF;
-  --tw-roman-300: #F3AEAE;
-  --tw-roman-400: #EB7E7E;
-  --tw-roman-500: #E16363;
-  --tw-roman-600: #CA3838;
-  --tw-roman-700: #AA2B2B;
-  --tw-roman-800: #8D2727;
+  --tw-roman-50: #fdf3f3;
+  --tw-roman-100: #fbe5e5;
+  --tw-roman-200: #f9cfcf;
+  --tw-roman-300: #f3aeae;
+  --tw-roman-400: #eb7e7e;
+  --tw-roman-500: #e16363;
+  --tw-roman-600: #ca3838;
+  --tw-roman-700: #aa2b2b;
+  --tw-roman-800: #8d2727;
   --tw-roman-900: #752727;
-  --tw-roman-950: #3F1010;
+  --tw-roman-950: #3f1010;
 
-  --tw-mine-shaft-50: #F6F6F6;
-  --tw-mine-shaft-100: #E7E7E7;
-  --tw-mine-shaft-200: #D1D1D1;
-  --tw-mine-shaft-300: #B0B0B0;
+  --tw-mine-shaft-50: #f6f6f6;
+  --tw-mine-shaft-100: #e7e7e7;
+  --tw-mine-shaft-200: #d1d1d1;
+  --tw-mine-shaft-300: #b0b0b0;
   --tw-mine-shaft-400: #888888;
-  --tw-mine-shaft-500: #6D6D6D;
-  --tw-mine-shaft-600: #5D5D5D;
-  --tw-mine-shaft-700: #4F4F4F;
+  --tw-mine-shaft-500: #6d6d6d;
+  --tw-mine-shaft-600: #5d5d5d;
+  --tw-mine-shaft-700: #4f4f4f;
   --tw-mine-shaft-800: #454545;
   --tw-mine-shaft-900: #333333;
   --tw-mine-shaft-950: #262626;
 
-  --tw-raw-sienna-50: #FDF6EF;
-  --tw-raw-sienna-100: #FAEADA;
-  --tw-raw-sienna-200: #F3D2B5;
-  --tw-raw-sienna-300: #ECB485;
-  --tw-raw-sienna-400: #E38B54;
-  --tw-raw-sienna-500: #DE763E;
-  --tw-raw-sienna-600: #CE5728;
-  --tw-raw-sienna-700: #AB4323;
+  --tw-raw-sienna-50: #fdf6ef;
+  --tw-raw-sienna-100: #faeada;
+  --tw-raw-sienna-200: #f3d2b5;
+  --tw-raw-sienna-300: #ecb485;
+  --tw-raw-sienna-400: #e38b54;
+  --tw-raw-sienna-500: #de763e;
+  --tw-raw-sienna-600: #ce5728;
+  --tw-raw-sienna-700: #ab4323;
   --tw-raw-sienna-800: #893723;
-  --tw-raw-sienna-900: #6F2F1F;
-  --tw-raw-sienna-950: #3B150F;
+  --tw-raw-sienna-900: #6f2f1f;
+  --tw-raw-sienna-950: #3b150f;
 
-  --tw-thunderbird-50: #FFF5ED;
-  --tw-thunderbird-100: #FFE8D4;
-  --tw-thunderbird-200: #FFCCA9;
-  --tw-thunderbird-300: #FFA872;
-  --tw-thunderbird-400: #FE7939;
-  --tw-thunderbird-500: #FD5412;
-  --tw-thunderbird-600: #EE3A08;
-  --tw-thunderbird-700: #C52809;
-  --tw-thunderbird-800: #9C2110;
-  --tw-thunderbird-900: #7E1E10;
-  --tw-thunderbird-950: #440B06;
+  --tw-thunderbird-50: #fff5ed;
+  --tw-thunderbird-100: #ffe8d4;
+  --tw-thunderbird-200: #ffcca9;
+  --tw-thunderbird-300: #ffa872;
+  --tw-thunderbird-400: #fe7939;
+  --tw-thunderbird-500: #fd5412;
+  --tw-thunderbird-600: #ee3a08;
+  --tw-thunderbird-700: #c52809;
+  --tw-thunderbird-800: #9c2110;
+  --tw-thunderbird-900: #7e1e10;
+  --tw-thunderbird-950: #440b06;
+
+  --tw-chateau-green-50: #f2fbf5;
+  --tw-chateau-green-100: #e0f8e8;
+  --tw-chateau-green-200: #c2f0d2;
+  --tw-chateau-green-300: #93e2af;
+  --tw-chateau-green-400: #5ccc86;
+  --tw-chateau-green-500: #35b063;
+  --tw-chateau-green-600: #27924f;
+  -tw-chateau-green-700: #227340;
+  --tw-chateau-green-800: #1f5c36;
+  --tw-chateau-green-900: #1c4b2f;
+  --tw-chateau-green-950: #0a2917;
 }
 
 * {
@@ -70,13 +82,18 @@ a {
   text-decoration: none;
   color: inherit;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Inter, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Inter, "Helvetica Neue", sans-serif !important;
+}
 
-
-// Override Angular Material 
+// Override Angular Material
 
 .mat-mdc-form-field-hint-wrapper,
 .mat-mdc-form-field-error-wrapper {
-    padding: 0 !important;
+  padding: 0 !important;
 }

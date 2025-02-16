@@ -48,14 +48,34 @@
       </mat-form-field>
     </div>
 
-    <!-- Telefone e Cargo -->
+    <!-- CPF, Telefone e Cargo -->
     <div class="flex flex-col gap-4 lg:flex-row">
-      <mat-form-field class="w-full lg:max-w-[313px]">
-        <mat-label> Telefone </mat-label>
+      <mat-form-field class="w-full lg:max-w-[230px]">
+        <mat-label> CPF </mat-label>
         <input
           matInput
           minlength="11"
-          maxlength="11"
+          maxlength="14"
+          placeholder="000.000.000-00"
+          formControlName="cpf"
+          (change)="onFormattedCpf(userForm.get('cpf')?.value!)"
+          [value]="formattedCpf"
+        />
+
+        <mat-error *ngIf="handleMessageError('cpf', 'required')">
+          Campo obrigatório!
+        </mat-error>
+        <mat-error *ngIf="handleMessageError('cpf', 'cpfInvalid', true)">
+          CPF inválido!
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="w-full lg:max-w-[313px]">
+        <mat-label> Telefone Celular </mat-label>
+        <input
+          matInput
+          minlength="11"
+          maxlength="14"
+          placeholder="(00) 00000-0000"
           formControlName="telephone"
           (change)="onFormattedPhone(userForm.get('telephone')?.value!)"
           [value]="formattedPhone"
@@ -84,7 +104,8 @@
           matInput
           type="text"
           minlength="8"
-          maxlength="8"
+          maxlength="9"
+          placeholder="00000-000"
           formControlName="zipCode"
           (change)="onFormattedCep(userForm.get('address.zipCode')?.value!)"
           (blur)="getLocationInfo()"
@@ -129,7 +150,7 @@
       <!-- Número -->
       <mat-form-field class="w-full md:max-w-[240px]" formGroupName="address">
         <mat-label> Número </mat-label>
-        <input matInput type="number" formControlName="number" />
+        <input matInput formControlName="number" />
 
         <mat-error *ngIf="handleMessageError('address.number', 'required')">
           Campo Obrigatório!
@@ -186,7 +207,7 @@
     <div class="flex flex-col gap-4 lg:flex-row">
       <mat-form-field class="w-full">
         <mat-label> Email </mat-label>
-        <input matInput type="email" formControlName="email" />
+        <input matInput type="email" placeholder="email@email.com" formControlName="email" />
 
         <mat-error *ngIf="handleMessageError('email', 'required')">
           Campo obrigatório!
@@ -205,7 +226,7 @@
       <div class="relative">
         <mat-form-field class="w-full">
           <mat-label> Senha </mat-label>
-          <input matInput type="password" formControlName="password" (input)="validatePassword($event)"/>
+          <input matInput type="password" formControlName="password" (input)="handleValidatePassword($event)"/>
 
           <mat-hint class="flex">
             <div
@@ -237,14 +258,14 @@
           matInput
           type="password"
           formControlName="confirmPassword"
-          (input)="validateSamePassword()"
+          (change)="handleConfirmPassword()"
         />
 
         <mat-error *ngIf="handleMessageError('confirmPassword', 'required')">
           Campo obrigatório!
         </mat-error>
 
-        <mat-error *ngIf="handleMessageError('confirmPassword', 'passwordsMismatch', true)">
+        <mat-error *ngIf="this.userForm.get('confirmPassword')?.hasError('passwordMatchError')">
           As senhas não são iguais!
         </mat-error>
       </mat-form-field>
@@ -267,3 +288,6 @@
     </button>
   </div>
 </form>
+
+
+<app-message [iconType]="toast.iconType" [title]="toast.title" [message]="toast.message" [opacity]="toast.opacity.length == 0 ? 'opacity-0' : toast.opacity"></app-message>

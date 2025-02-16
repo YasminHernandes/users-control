@@ -4,5 +4,8 @@ export const environment = {
     },
     cep: {
         baseUrl: 'http://viacep.com.br/ws/',
+    },
+    register: {
+        baseUrl: 'http://localhost:3000'
     }
 };

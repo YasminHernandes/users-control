@@ -4,5 +4,8 @@ export const environment = {
     },
     cep: {
         baseUrl: '',
+    },
+    register: {
+        baseUrl: ''
     }
 };

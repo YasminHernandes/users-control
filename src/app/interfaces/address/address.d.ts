@@ -4,7 +4,7 @@ export interface IAddress {
   street: FormControl<string | null>;
   number: FormControl<string | null>;
   zipCode: FormControl<string | null>;
-  complement: FormControl<string | null>;
+  complement?: FormControl<string | null>;
   city: FormControl<string | null>;
   state: FormControl<string | null>;
   country: FormControl<string | null>;

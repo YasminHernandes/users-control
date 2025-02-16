@@ -1,10 +1,14 @@
-import { ICountry, IState, IUser } from './../../interfaces';
+import { IAddress, ICountry, IState, IUser } from './../../interfaces';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControlOptions, FormBuilder, Validators } from '@angular/forms';
 import { LocationsService } from '../../services/locations.service';
 import { CEPService } from '../../services/cep.service';
 import { Utils } from 'src/app/utils/utils';
 import { CepPipe, PhonePipe } from 'src/app/pipes/pipes';
+import { RegisterService } from 'src/app/services/register.service';
+import { IUserRequest } from 'src/app/interfaces/user/user';
+import { CpfPipe } from '../../pipes/cpf/cpf.pipe';
+import { validatorCPF, validatorPhone, validatorSamePassword } from './../../utils/validators';
 
 @Component({
   selector: 'app-form',
@@ -15,23 +19,28 @@ export class FormComponent implements OnInit {
     private fb: FormBuilder,
     private locationsService: LocationsService,
     private cepService: CEPService,
+    private registerService: RegisterService,
     private cepPipe: CepPipe,
+    private cpfPipe: CpfPipe,
     private phonePipe: PhonePipe
   ) {}
 
-  utils = new Utils(this.cepPipe, this.phonePipe);
+  utils = new Utils(this.cepPipe, this.phonePipe, this.cpfPipe);
 
   states: IState[] = [];
   country: ICountry[] = [];
   calendarFilter = this.utils.myCalendarFilter;
   formattedCep: string | null | undefined;
   formattedPhone: string | null | undefined;
+  formattedCpf: string | null | undefined;
   formattedStreet: string | null | undefined;
   formattedBirthDay: string | null | undefined;
   messageError: string = '';
+  onValidatePassword!: { widthPasswordProgress: number; bgProgressColor: string };
 
   userForm = this.fb.group<IUser>({
     name: this.fb.control('', Validators.required),
+    cpf: this.fb.control('', [Validators.required, validatorCPF()]),
     birthDate: this.fb.control(null, Validators.required),
     email: this.fb.control('', [Validators.required, Validators.email]),
     password: this.fb.control('', [
@@ -45,9 +54,9 @@ export class FormComponent implements OnInit {
       Validators.required,
       Validators.minLength(8),
     ]),
-    telephone: this.fb.control('', Validators.required),
+    telephone: this.fb.control('', [Validators.required, validatorPhone()]),
     role: this.fb.control('', Validators.required),
-    address: this.fb.group({
+    address: this.fb.group<IAddress>({
       street: this.fb.control('', Validators.required),
       number: this.fb.control('', Validators.required),
       zipCode: this.fb.control('', Validators.required),
@@ -56,11 +65,20 @@ export class FormComponent implements OnInit {
       state: this.fb.control('', Validators.required),
       country: this.fb.control('', Validators.required),
     }),
-  });
+  }, 
+  { validators: validatorSamePassword } as AbstractControlOptions
+  );
 
   widthPasswordProgress: number = 0;
   bgProgressColor: string = '';
 
+  toast = {
+    iconType: '',
+    title: '',
+    message: '',
+    status: false,
+    opacity: ''
+  }
 
   onFormattedCep(cep: string | null) {
     this.formattedCep = this.utils.formatCep(cep);
@@ -68,9 +86,69 @@ export class FormComponent implements OnInit {
   onFormattedPhone(phone: string | null) {
     this.formattedPhone = this.utils.formatPhone(phone);
   }
+  onFormattedCpf(cpf: string | null) {
+    this.formattedCpf = this.utils.formatCPF(cpf);
+  }
+
+  handleMessageError(input: string, errorName: string, hasValue?: boolean) {
+    const value = String(this.userForm.get(input)?.value);
+    
+    if (hasValue) return this.userForm.get(input)?.hasError(errorName!) && value?.length !== 0 
+    else return this.userForm.get(input)?.hasError(errorName!) && value?.length == 0
+  }
+
+  handleConfirmPassword() {
+    if(this.userForm.hasError('passwordMatchError')) {
+      this.userForm.get('confirmPassword')?.setErrors({ passwordMatchError: true })
+    }
+  }
+
+  handleValidatePassword(event: Event) {
+    this.onValidatePassword = this.utils.validatePassword(event);
+    this.widthPasswordProgress = this.utils.validatePassword(event).widthPasswordProgress;
+    this.bgProgressColor = this.utils.validatePassword(event).bgProgressColor;
+  }
+
+
+  handleSubmit() {
+    if(this.userForm.valid) {
+      const userRequest = this.userForm.getRawValue() as IUserRequest
+      
+      this.registerService.register(userRequest).subscribe({
+        next: () => {
+          this.toast = {
+            iconType: 'success',
+            title: 'Sucesso',
+            message: 'Usuário cadastrado com sucesso!',
+            status: true,
+            opacity: 'opacity-100'
+          }
+          
+
+          setTimeout(() => {
+            this.toast = { ...this.toast, status: false, opacity: 'opacity-0'}
+          }, 3000)
+
+        },
+        error: (error) => {
+          this.toast = {
+            iconType: 'error',
+            title: 'Erro',
+            message: 'Usuário já existe!',
+            status: true,
+            opacity: 'opacity-100'
+          }
+          setTimeout(() => {
+            this.toast = { ...this.toast, status: false, opacity: 'opacity-0' }
+          }, 3000)
+        },
+      });
+
+    } else console.log('Formulário inválido');
+  }
 
   getLocationInfo() {
-    const cep = this.userForm.get('address.zipCode')?.value;
+    const cep = this.userForm.get('address.zipCode')?.value?.replace('-', '');
 
     cep!.length > 0 &&
       this.cepService.getCEP(cep!).subscribe({
@@ -93,74 +171,11 @@ export class FormComponent implements OnInit {
       });
   }
 
-  handleMessageError(input: string, errorName: string, hasValue?: boolean) {
-    const value = String(this.userForm.get(input)?.value);
-
-    if (hasValue)
-      return (this.userForm.get(input)?.hasError(errorName!) && value?.length !== 0)
-    else
-      return (this.userForm.get(input)?.hasError(errorName!) && value?.length == 0)
-  }
-
-  validatePassword(event: Event) {
-    const password = event.target as HTMLInputElement;
-    const isValidLength = password.value.length >= 8;
-    let score = 0;
-
-    const bgColors = {
-      1: 'bg-red-500',
-      2: 'bg-orange-500',
-      3: 'bg-yellow-500',
-      4: 'bg-lime-500',
-      5: 'bg-green-500',
-    };
-
-    if (isValidLength) score++;
-    if (password.value.match(/[A-Z]/)) score++;
-    if (password.value.match(/[a-z]/)) score++;
-    if (password.value.match(/[0-9]/)) score++;
-    if (password.value.match(/[@$!%*?&]/)) score++;
-
-    this.widthPasswordProgress = (score / 5) * 100;
-
-    switch (score) {
-      case 1:
-        this.bgProgressColor = bgColors[score];
-        break;
-      case 2:
-        this.bgProgressColor = bgColors[score];
-        break;
-      case 3:
-        this.bgProgressColor = bgColors[score];
-        break;
-      case 4:
-        this.bgProgressColor = bgColors[score];
-        break;
-      case 5:
-        this.bgProgressColor = bgColors[score];
-        break;
-      default:
-        this.bgProgressColor = '';
-        break;
-    }
-  }
-
-  validateSamePassword() {
-    const passValue = this.userForm.get('password')?.value;
-    const confirmPassValue = this.userForm.get('confirmPassword')?.value;
-
-    return passValue === confirmPassValue
-      ? null
-      : this.userForm.get('confirmPassword')?.setErrors({ passwordsMismatch: true });
-  }
-
-  handleSubmit() {}
-
   ngOnInit(): void {
     this.locationsService
       .getStates()
       .subscribe((response) => (
-        this.states = response.sort((a, b) => a.nome.localeCompare(b.nome))
+        this.states = response.sort((a, b) => a.nome!.localeCompare(b.nome!))
       ));
 
     this.locationsService

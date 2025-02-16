@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormComponent } from './form/form.component';
 import { CommonModule } from "@angular/common";
 import { CepPipe, PhonePipe } from "../pipes/pipes";
+import { MessageComponent } from './message/message.component';
 
 @NgModule({
     imports: [
@@ -15,8 +16,9 @@ import { CepPipe, PhonePipe } from "../pipes/pipes";
     ],
     declarations: [
       FormComponent,
+      MessageComponent,
       CepPipe,
-      PhonePipe
+      PhonePipe,
     ],
     exports: [
       AngularMaterialModule,
