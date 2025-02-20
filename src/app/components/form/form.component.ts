@@ -38,6 +38,8 @@ export class FormComponent implements OnInit {
   messageError: string = '';
   onValidatePassword!: { widthPasswordProgress: number; bgProgressColor: string };
 
+  loading: boolean = false;
+
   userForm = this.fb.group<IUser>({
     name: this.fb.control('', Validators.required),
     cpf: this.fb.control('', [Validators.required, validatorCPF()]),
@@ -116,18 +118,23 @@ export class FormComponent implements OnInit {
       
       this.registerService.register(userRequest).subscribe({
         next: () => {
-          this.toast = {
-            iconType: 'success',
-            title: 'Sucesso',
-            message: 'Usuário cadastrado com sucesso!',
-            status: true,
-            opacity: 'opacity-100'
-          }
-          
+          this.loading = true
+         
+          setTimeout(() => {
+            this.loading = false
+
+            this.toast = {
+              iconType: 'success',
+              title: 'Sucesso',
+              message: 'Usuário cadastrado com sucesso!',
+              status: true,
+              opacity: 'opacity-100'
+            }
+          }, 3000)
 
           setTimeout(() => {
             this.toast = { ...this.toast, status: false, opacity: 'opacity-0'}
-          }, 3000)
+          }, 6000)
 
         },
         error: (error) => {

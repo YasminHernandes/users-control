@@ -272,13 +272,16 @@
     </div>
   </div>
 
-  <div class="w-full flex flex-col gap-4 mt-9 md:flex-row md:justify-center">
+  <div style-control="button-submit" class="w-full flex flex-col gap-4 mt-9 md:flex-row md:justify-center">
     <button
       mat-raised-button
-      class="!bg-thunderbird-700 !text-mine-shaft-50"
+      class="flex !bg-thunderbird-700 !text-mine-shaft-50"
       (click)="handleSubmit()"
     >
       Cadastrar
+
+      <svg-icon *ngIf="loading" class="animate-spin" src="assets/icons/svg/loading.svg"></svg-icon>
+
     </button>
     <button
       mat-stroked-button
