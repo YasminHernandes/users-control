@@ -1,4 +1,4 @@
-<form [formGroup]="userForm">
+<form [formGroup]="userForm" class="px-4 pb-4">
   <div class="flex flex-col gap-4">
     <!-- Nome completo e Data de Nascimento -->
     <div class="flex flex-col gap-4 lg:flex-row">
@@ -273,24 +273,15 @@
   </div>
 
   <div style-control="button-submit" class="w-full flex flex-col gap-4 mt-9 md:flex-row md:justify-center">
-    <button
-      mat-raised-button
-      class="flex !bg-thunderbird-700 !text-mine-shaft-50"
-      (click)="handleSubmit()"
-    >
+    <button mat-raised-button class="flex !bg-thunderbird-700 !text-mine-shaft-50" (click)="handleSubmit()">
       Cadastrar
 
       <svg-icon *ngIf="loading" class="animate-spin" src="assets/icons/svg/loading.svg"></svg-icon>
-
     </button>
-    <button
-      mat-stroked-button
-      class="!border-thunderbird-700 !text-thunderbird-700"
-    >
+    <button mat-stroked-button class="!border-thunderbird-700 !text-thunderbird-700">
       Limpar
     </button>
   </div>
 </form>
-
 
 <app-message [iconType]="toast.iconType" [title]="toast.title" [message]="toast.message" [opacity]="toast.opacity.length == 0 ? 'opacity-0' : toast.opacity"></app-message>

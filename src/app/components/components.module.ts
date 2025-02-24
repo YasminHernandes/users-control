@@ -6,6 +6,7 @@ import { FormComponent } from './form/form.component';
 import { CommonModule } from "@angular/common";
 import { CepPipe, PhonePipe } from "../pipes/pipes";
 import { MessageComponent } from './message/message.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
     imports: [
@@ -17,13 +18,18 @@ import { MessageComponent } from './message/message.component';
     declarations: [
       FormComponent,
       MessageComponent,
+      FooterComponent,
       CepPipe,
       PhonePipe,
     ],
     exports: [
+      CommonModule,
       AngularMaterialModule,
       FormComponent,
-      CommonModule
+      MessageComponent,
+      FooterComponent,
+      CepPipe,
+      PhonePipe,
     ]
 })
 

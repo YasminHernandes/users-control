@@ -111,7 +111,6 @@ export class FormComponent implements OnInit {
     this.bgProgressColor = this.utils.validatePassword(event).bgProgressColor;
   }
 
-
   handleSubmit() {
     if(this.userForm.valid) {
       const userRequest = this.userForm.getRawValue() as IUserRequest
@@ -132,9 +131,7 @@ export class FormComponent implements OnInit {
             }
           }, 3000)
 
-          setTimeout(() => {
-            this.toast = { ...this.toast, status: false, opacity: 'opacity-0'}
-          }, 6000)
+          setTimeout(() => this.toast = { ...this.toast, status: false, opacity: 'opacity-0'}, 6000)
 
         },
         error: (error) => {
@@ -145,13 +142,16 @@ export class FormComponent implements OnInit {
             status: true,
             opacity: 'opacity-100'
           }
-          setTimeout(() => {
-            this.toast = { ...this.toast, status: false, opacity: 'opacity-0' }
-          }, 3000)
+          setTimeout(() => this.toast = { ...this.toast, status: false, opacity: 'opacity-0' }, 3000)
         },
       });
 
     } else console.log('Formulário inválido');
+  }
+
+  handleCleanForm() {
+    this.userForm.reset();
+    console.log(this.userForm.value);
   }
 
   getLocationInfo() {
